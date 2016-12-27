@@ -3,22 +3,23 @@
   padding: 1px 4px;
   font-family: monospace;
   border: 1px solid black;
-}
+  cursor: pointer;
 
-.status.new:before {
-  content: "n";
-}
+  &.new:before {
+    content: "n";
+  }
 
-.status.acknowledged:before {
-  content: "a";
-}
+  &.acknowledged:before {
+    content: "a";
+  }
 
-.status.in-progress:before {
-  content: "i";
-}
+  &.in-progress:before {
+    content: "i";
+  }
 
-.status.done:before {
-  content: "d";
+  &.done:before {
+    content: "d";
+  }
 }
 
 body {

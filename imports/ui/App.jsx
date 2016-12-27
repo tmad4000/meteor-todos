@@ -37,14 +37,14 @@ class App extends Component {
     let filteredTasks = this.props.tasks;
 
     if (this.state.hideCompleted) {
-      filteredTasks = filteredTasks.filter(task => !task.checked);
+      filteredTasks = filteredTasks.filter(task => task.status !== 'done');
     }
     if (this.state.textInput !== '') {
-      filteredTasks = filteredTasks.filter(task => task.text.indexOf(this.state.textInput) !== -1);
+      filteredTasks = filteredTasks.filter(task => task.text.indexOf(this.state.textInput.trim()) !== -1);
     }
 
     return filteredTasks.map((task) => (
-      <Task key={task._id} task={task} />
+      <Task key={task._id} task={task} status={task.status} />
     ));
   }
  
@@ -56,7 +56,8 @@ class App extends Component {
 
     Tasks.insert({
       text,
-      createdAt: new Date(), // current time
+      createdAt: new Date(),
+      status: 'new',
     });
 
     this.setState({'textInput': ''});
@@ -79,15 +80,12 @@ class App extends Component {
           <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
             <input
               type="text"
-
               onChange={(e) => this.setState({textInput:e.target.value})}
-
               value={this.state.textInput}
               placeholder="Type to add new tasks"
             />
           </form>
         </header>
- 
         <ul>
           {this.renderTasks()}
         </ul>
@@ -99,14 +97,12 @@ class App extends Component {
 App.propTypes = {
   tasks: PropTypes.array.isRequired,
   incompleteCount: PropTypes.number.isRequired,
-
 };
 
 export default createContainer(() => {
   return {
     tasks: Tasks.find({},{ sort: { createdAt: -1 } }).fetch(),
-    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
-
+    incompleteCount: Tasks.find({ status: { $ne: 'done' } }).count(),
   };
 }, App);
 
