@@ -5,25 +5,24 @@ import ReactDOM from 'react-dom';
 import { Tasks } from '../api/tasks.js';
 
 import Task from './Task.jsx';
- 
-// App component - represents the whole app
+
+
+// represents the whole app
 class App extends Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
       hideCompleted: false,
       textInput: '',
     };
   }
 
-
   toggleHideCompleted() {
     this.setState({
       hideCompleted: !this.state.hideCompleted,
     });
   }
- 
 
   // getTasks() {
   //   return [
@@ -32,7 +31,7 @@ class App extends Component {
   //     { _id: 3, text: 'This is task 3' },
   //   ]
   // }
- 
+
   renderTasks() {
     let filteredTasks = this.props.tasks;
 
@@ -40,18 +39,19 @@ class App extends Component {
       filteredTasks = filteredTasks.filter(task => task.status !== 'done');
     }
     if (this.state.textInput !== '') {
-      filteredTasks = filteredTasks.filter(task => task.text.indexOf(this.state.textInput.trim()) !== -1);
+      filteredTasks = filteredTasks.filter(
+        task => task.text.indexOf(this.state.textInput.trim()) !== -1
+      );
     }
 
     return filteredTasks.map((task) => (
       <Task key={task._id} task={task} status={task.status} />
     ));
   }
- 
+
   handleSubmit(event) {
     event.preventDefault();
 
-    // Find the text field via the React ref
     const text = this.state.textInput.trim();
 
     Tasks.insert({
@@ -77,7 +77,7 @@ class App extends Component {
             />
             Hide Completed Tasks
           </label>
-          <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+          <form className="new-task" onSubmit={this.handleSubmit.bind(this)}>
             <input
               type="text"
               onChange={(e) => this.setState({textInput:e.target.value})}
@@ -94,10 +94,12 @@ class App extends Component {
   }
 }
 
+
 App.propTypes = {
   tasks: PropTypes.array.isRequired,
   incompleteCount: PropTypes.number.isRequired,
 };
+
 
 export default createContainer(() => {
   return {
